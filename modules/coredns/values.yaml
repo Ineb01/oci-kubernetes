@@ -1,0 +1,45 @@
+
+image:
+  repository: coredns/coredns
+ 
+replicaCount: 1
+
+serviceType: "LoadBalancer"
+
+isClusterService: false
+
+service:
+  externalIPs: ["192.168.1.98"]
+
+servers:
+- zones:     
+  - zone: "."
+    scheme: dns://
+    use_tcp: true
+  port: 53
+  plugins: 
+  - name: errors
+  - name: health
+    configBlock: |-
+      lameduck 5s
+  - name: ready
+  - name: kubernetes
+    parameters: cluster.local in-addr.arpa ip6.arpa
+    configBlock: |-
+      pods insecure
+      fallthrough in-addr.arpa ip6.arpa
+      ttl 30
+  - name: file
+    parameters: /etc/coredns/dphx.db local.dphx.eu
+  - name: forward 
+    parameters: . 8.8.8.8
+
+zoneFiles:
+  - filename: dphx.db
+    domain: local.dphx.eu
+    contents: |
+      local.dphx.eu.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
+      proxmox.local.dphx.eu.   IN A   192.168.1.99
+      cluster.local.dphx.eu.   IN A   192.168.1.98
+      router.local.dphy.eu.    IN A   192.168.1.1
+      *.local.dphx.eu.   IN A   192.168.1.98

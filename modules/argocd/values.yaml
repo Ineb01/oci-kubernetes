@@ -1,0 +1,10 @@
+global:
+  domain: argocd.local.dphx.eu
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
