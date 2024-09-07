@@ -16,6 +16,13 @@ provider "acme" {
   server_url = "https://acme-v02.api.letsencrypt.org/directory"
 }
 
+provider "proxmox" {
+  pm_api_token_id = "root@pam!terraform"
+  pm_api_token_secret = "7dd43d8a-bf23-47b4-ac82-590e867b9437"
+  pm_api_url = "https://proxmox.local.dphx.eu:8006/api2/json/"
+  pm_tls_insecure = true
+}
+
 terraform {
   required_providers {
     helm = {
@@ -32,6 +39,10 @@ terraform {
     }
     acme = {
       source = "vancluever/acme"
+    }
+    proxmox = {
+      source = "Telmate/proxmox"
+      version = "3.0.1-rc4"
     }
   }
 }
