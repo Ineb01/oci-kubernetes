@@ -81,8 +81,8 @@ resource "kubernetes_secret" "tls_secret" {
   }
 
   data = {
-    "tls.crt" = acme_certificate.certificate.certificate_pem
-    "tls.key" = nonsensitive(acme_certificate.certificate.private_key_pem)
+    "tls.crt" = "a"#acme_certificate.certificate.certificate_pem
+    "tls.key" = "a"#nonsensitive(acme_certificate.certificate.private_key_pem)
   }
 
   type = "kubernetes.io/tls"
