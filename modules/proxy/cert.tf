@@ -14,8 +14,8 @@ resource "acme_registration" "registration" {
 
 resource "acme_certificate" "certificate" {
   account_key_pem           = acme_registration.registration.account_key_pem
-  common_name               = "local.dphx.eu"
-  subject_alternative_names = ["*.local.dphx.eu"]
+  common_name               = "dphx.eu"
+  subject_alternative_names = ["*.dphx.eu"]
 
   dns_challenge {
     provider = "route53"

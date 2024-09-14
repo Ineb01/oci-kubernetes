@@ -9,7 +9,7 @@ serviceType: "LoadBalancer"
 isClusterService: false
 
 service:
-  externalIPs: ["192.168.1.98"]
+  externalIPs: ["192.168.1.32"]
 
 servers:
 - zones:     
@@ -40,6 +40,6 @@ zoneFiles:
     contents: |
       local.dphx.eu.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
       proxmox.local.dphx.eu.   IN A   192.168.1.99
-      cluster.local.dphx.eu.   IN A   192.168.1.98
+      cluster.local.dphx.eu.   IN A   192.168.1.32
       router.local.dphy.eu.    IN A   192.168.1.1
-      *.local.dphx.eu.   IN A   192.168.1.98
+      *.local.dphx.eu.   IN A   192.168.1.32

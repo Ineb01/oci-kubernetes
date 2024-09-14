@@ -88,19 +88,19 @@ resource "kubernetes_secret" "tls_secret" {
   type = "kubernetes.io/tls"
 }
 
-resource "kubernetes_manifest" "traefik-ignore-tls" {
-  manifest = {
-    apiVersion = "traefik.io/v1alpha1"
-    kind       = "ServersTransport"
-
-    metadata = {
-      name = "traefikignore"
-      namespace = kubernetes_namespace.proxy.metadata[0].name
-    }
-
-    spec = {
-      insecureSkipVerify = true
-    }
-  }
-}
+#resource "kubernetes_manifest" "traefik-ignore-tls" {
+#  manifest = {
+#    apiVersion = "traefik.io/v1alpha1"
+#    kind       = "ServersTransport"
+#
+#    metadata = {
+#      name = "traefikignore"
+#      namespace = kubernetes_namespace.proxy.metadata[0].name
+#    }
+#
+#    spec = {
+#      insecureSkipVerify = true
+#    }
+#  }
+#}
 
