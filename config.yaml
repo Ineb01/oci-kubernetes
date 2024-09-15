@@ -1,5 +1,6 @@
 certs:
   domain: dphx.eu
+  subdomain: cluster.dphx.eu
   email: benjamin.bachmayr@gmail.com
 cluster:
   proxmox_node: proxmox-1

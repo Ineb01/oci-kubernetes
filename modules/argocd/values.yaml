@@ -1,5 +1,5 @@
 global:
-  domain: argocd.local.dphx.eu
+  domain: argocd.cluster.dphx.eu
 
 configs:
   params:
@@ -8,3 +8,9 @@ configs:
 server:
   ingress:
     enabled: true
+    ingressClassName: nginx
+    tls: true
+    extraTls:
+     - hosts:
+       - argocd.cluster.dphx.eu
+       secretName: argocd-server-tls

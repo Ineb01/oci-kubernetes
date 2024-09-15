@@ -13,8 +13,8 @@ resource "acme_registration" "registration" {
 
 resource "acme_certificate" "certificate" {
   account_key_pem           = acme_registration.registration.account_key_pem
-  common_name               = var.domain
-  subject_alternative_names = ["*.${var.domain}"]
+  common_name               = var.subdomain
+  subject_alternative_names = ["*.${var.subdomain}"]
 
   dns_challenge {
     provider = "route53"
@@ -32,6 +32,19 @@ variable "domain" {
   type = string
 }
 
+variable "subdomain" {
+  type = string
+}
+
 variable "email" {
   type = string
+}
+
+output "certificate" {
+  value = acme_certificate.certificate.certificate_pem
+}
+
+output "private_key" {
+  value = acme_certificate.certificate.private_key_pem
+  sensitive = true
 }

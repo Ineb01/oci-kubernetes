@@ -8,12 +8,5 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "2.32.0"
     }
-    aws = {
-      source  = "hashicorp/aws"
-      version = "4.62.0"
-    }
-    acme = {
-      source = "vancluever/acme"
-    }
   }
 }
