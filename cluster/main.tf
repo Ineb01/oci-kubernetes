@@ -45,14 +45,13 @@ resource "ssh_resource" "kubeconfig" {
 
 resource "local_file" "kubeconfig" {
   filename = "/home/ineb01/.kube/config"
-  content  = replace(ssh_resource.kubeconfig.result, "127.0.0.1", module.proxmox-node-1.ip)
+  content  = yamlencode(local.kubeconfig)
 }
 
 resource "local_file" "node1-tls" {
   filename = "./.terraform/node-1"
   content  = module.proxmox-node-1.tls_private_key
 }
-
 
 module "proxmox-node-2" {
   source = "../modules/ubuntu-nodes/proxmox"
@@ -102,4 +101,24 @@ resource "ssh_resource" "install_k3s_3" {
 
 variable "proxmox_node" {
   type = string
+}
+
+locals {
+  kubeconfig = yamldecode(replace(ssh_resource.kubeconfig.result, "127.0.0.1", module.proxmox-node-1.ip))
+}
+
+output "kubernetes_host" {
+  value = local.kubeconfig.clusters[0].cluster.server
+}
+
+output "client_certificate" {
+  value = local.kubeconfig.users[0].user.client-certificate-data
+}
+
+output "client_key" {
+  value = local.kubeconfig.users[0].user.client-key-data
+}
+
+output "cluster_ca_certificate" {
+  value = local.kubeconfig.clusters[0].cluster.certificate-authority-data
 }
