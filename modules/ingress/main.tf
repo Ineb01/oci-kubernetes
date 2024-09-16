@@ -18,6 +18,67 @@ resource "helm_release" "nginx-ingress" {
   ]
 }
 
+resource "kubernetes_service" "proxmox" {
+  metadata {
+    name = "proxmox"
+    namespace = kubernetes_namespace.ingress-controller.metadata[0].name
+  }
+  spec {
+    port {
+      port        = 8006
+      target_port = 8006
+    }
+    cluster_ip = "None"
+    type = "ClusterIP"
+  }
+}
+
+resource "kubernetes_endpoints" "proxmox" {
+  metadata {
+    name = "proxmox"
+    namespace = kubernetes_namespace.ingress-controller.metadata[0].name
+  }
+  subset {
+    address {
+      ip = "192.168.1.99"
+    }
+    port {
+      port     = 8006
+      protocol = "TCP"
+    }
+  }
+}
+
+resource "kubernetes_ingress_v1" "proxmox-ingress" {
+  metadata {
+    name = "proxmox-ingress"
+    namespace = kubernetes_namespace.ingress-controller.metadata[0].name
+    annotations = {
+      "nginx.ingress.kubernetes.io/backend-protocol" = "HTTPS"
+    }
+  }
+
+  spec {
+    ingress_class_name = "nginx"
+    rule {
+      host = var.proxmox_domain
+      http {
+        path {
+          backend {
+            service {
+              name = "proxmox"
+              port {
+                number = 8006
+              }
+            }
+          }
+          path = "/"
+        }
+      }
+    }
+  }
+}
+
 resource "kubernetes_service" "router" {
   metadata {
     name = "router"
@@ -58,7 +119,7 @@ resource "kubernetes_ingress_v1" "router-ingress" {
   spec {
     ingress_class_name = "nginx"
     rule {
-      host = "router.cluster.dphx.eu"
+      host = var.router_domain
       http {
         path {
           backend {

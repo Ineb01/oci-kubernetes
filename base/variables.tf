@@ -15,6 +15,14 @@ variable "argocd_domain" {
   type = string
 }
 
+variable "router_domain" {
+  type = string
+}
+
+variable "proxmox_domain" {
+  type = string
+}
+
 variable "authentik_admin_token" {
   type = string
   sensitive = true
