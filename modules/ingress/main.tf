@@ -10,6 +10,12 @@ resource "helm_release" "nginx-ingress" {
   chart      = "ingress-nginx"
   namespace  = kubernetes_namespace.ingress-controller.metadata[0].name
   version    = "4.4.2"
+  values = [
+    templatefile("${path.module}/values.yaml", {
+      namespace = kubernetes_namespace.ingress-controller.metadata[0].name
+      secret_name = kubernetes_secret.tls_secret.metadata[0].name
+    })
+  ]
 }
 
 resource "kubernetes_service" "router" {
@@ -66,10 +72,6 @@ resource "kubernetes_ingress_v1" "router-ingress" {
           path = "/"
         }
       }
-    }
-    tls {
-      hosts = ["*.cluster.dphx.eu"]
-      secret_name = "tls-secret"
     }
   }
 }

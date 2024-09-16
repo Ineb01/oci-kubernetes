@@ -1,0 +1,20 @@
+authentik:
+  secret_key: ${authentik_token}
+  postgresql:
+    password: ${postgres_pw}
+
+server:
+  ingress:
+    enabled: true
+    hosts:
+      - authentik.cluster.dphx.eu
+    ingressClassName: nginx
+
+postgresql:
+  enabled: true
+  auth:
+    password: ${postgres_pw}
+
+redis:
+  enabled: true
+  

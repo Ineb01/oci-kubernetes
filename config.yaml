@@ -5,4 +5,5 @@ certs:
 cluster:
   proxmox_node: proxmox-1
 base:
-  test: test
+  authentik_domain: authentik.cluster.dphx.eu
+  argocd_domain: argocd.cluster.dphx.eu
