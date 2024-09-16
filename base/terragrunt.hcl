@@ -44,6 +44,12 @@ EOC
   }
 }
 
+provider "authentik" {
+  url = "https://${yamldecode(file(find_in_parent_folders("config.yaml")))["base"]["authentik_domain"]}"
+  insecure = true
+  token = "${dependency.certs.outputs.authentik_admin_token}"
+}
+
 terraform {
   required_providers {
     helm = {
@@ -58,6 +64,10 @@ terraform {
       source = "hashicorp/random"
       version = "3.6.3"
     }
+    authentik = {
+      source = "goauthentik/authentik"
+      version = "2024.8.3"
+    }
   }
 }
 EOF
@@ -67,6 +77,7 @@ inputs = merge(
   yamldecode(file(find_in_parent_folders("config.yaml")))["base"],
   {
     certificate = dependency.certs.outputs.certificate,
-    private_key = dependency.certs.outputs.private_key
+    private_key = dependency.certs.outputs.private_key,
+    authentik_admin_token = dependency.certs.outputs.authentik_admin_token,
   }
 )

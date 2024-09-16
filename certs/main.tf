@@ -27,6 +27,16 @@ resource "acme_certificate" "certificate" {
   depends_on = [acme_registration.registration]
 }
 
+resource "random_password" "authentik_admin_token" {
+  length           = 16
+  special          = true
+  override_special = "!#$%"
+}
+
+output "authentik_admin_token" {
+  value = random_password.authentik_admin_token.result
+  sensitive = true
+}
 
 variable "domain" {
   type = string

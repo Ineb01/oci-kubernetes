@@ -13,9 +13,11 @@ resource "helm_release" "authentik" {
     templatefile(
       "${path.module}/values.yaml", 
       {
-        authentik_token = random_password.authentik_token.result,
-        postgres_pw     = random_password.postgres_pw.result
-        domain          = var.domain
+        authentik_token       = random_password.authentik_token.result,
+        postgres_pw           = random_password.postgres_pw.result
+        authentik_admin_pw    = random_password.authentik_admin_pw.result,
+        authentik_admin_token = var.authentik_admin_token,
+        domain                = var.domain
       }
     )
   ]
@@ -24,6 +26,12 @@ resource "helm_release" "authentik" {
 
 resource "random_password" "authentik_token" {
   length           = 50
+  special          = true
+  override_special = "!#$%"
+}
+
+resource "random_password" "authentik_admin_pw" {
+  length           = 16
   special          = true
   override_special = "!#$%"
 }

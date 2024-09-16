@@ -1,5 +1,7 @@
 authentik:
   secret_key: ${authentik_token}
+  bootstrap_password: ${authentik_admin_pw}
+  bootstrap_token: ${authentik_admin_token}
   postgresql:
     password: ${postgres_pw}
 
@@ -7,7 +9,7 @@ server:
   ingress:
     enabled: true
     hosts:
-      - authentik.cluster.dphx.eu
+      - ${domain}
     ingressClassName: nginx
 
 postgresql:

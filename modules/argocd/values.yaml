@@ -2,8 +2,32 @@ global:
   domain: ${domain}
 
 configs:
+  cm:
+    dex.config: |
+      connectors:
+      - config:
+          issuer: http://authentik.cluster.dphx.eu/application/o/${argocd_application_slug}/
+          clientID: ${argocd_authentik_client_id}
+          clientSecret: $dex.authentik.clientSecret
+          insecureEnableGroups: true
+          scopes:
+          - openid
+          - profile
+          - email
+        
+        name: authentik
+        type: oidc
+        id: authentik
+  rbac:
+    policy.csv: |
+      g, ${argocd_admin_groups}, role:admin
+      g, ${argocd_viewer_groups}, role:readonly
+
   params:
     server.insecure: true
+  secret:
+    extra:
+      dex.authentik.clientSecret: "${argocd_authentik_client_secret}"
 
 server:
   ingress:

@@ -14,3 +14,8 @@ variable "authentik_domain" {
 variable "argocd_domain" {
   type = string
 }
+
+variable "authentik_admin_token" {
+  type = string
+  sensitive = true
+}
