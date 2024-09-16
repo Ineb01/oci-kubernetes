@@ -36,5 +36,5 @@ resource "authentik_application" "proxmox" {
 }
 
 output "proxmox_command" {
-  value = "pamum realm add authentik --type openid --issuer-url http://authentik.cluster.dphx.eu/application/o/proxmox/ --client-id ${authentik_provider_oauth2.proxmox.client_id} --client-key ${authentik_provider_oauth2.proxmox.client_secret} --username-claim username --autocreate 1"
+  value = "pveum realm add authentik --type openid --issuer-url https://authentik.cluster.dphx.eu/application/o/proxmox/ --client-id ${authentik_provider_oauth2.proxmox.client_id} --client-key ${authentik_provider_oauth2.proxmox.client_secret} --username-claim username --autocreate 1"
 }

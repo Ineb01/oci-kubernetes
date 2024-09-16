@@ -46,7 +46,6 @@ EOC
 
 provider "authentik" {
   url = "https://${yamldecode(file(find_in_parent_folders("config.yaml")))["base"]["authentik_domain"]}"
-  insecure = true
   token = "${dependency.certs.outputs.authentik_admin_token}"
 }
 

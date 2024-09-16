@@ -6,7 +6,7 @@ configs:
     dex.config: |
       connectors:
       - config:
-          issuer: http://authentik.cluster.dphx.eu/application/o/${argocd_application_slug}/
+          issuer: https://authentik.cluster.dphx.eu/application/o/${argocd_application_slug}/
           clientID: ${argocd_authentik_client_id}
           clientSecret: $dex.authentik.clientSecret
           insecureEnableGroups: true

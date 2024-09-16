@@ -51,7 +51,7 @@ variable "email" {
 }
 
 output "certificate" {
-  value = acme_certificate.certificate.certificate_pem
+  value = "${acme_certificate.certificate.certificate_pem}\n${acme_certificate.certificate.issuer_pem}"
 }
 
 output "private_key" {
