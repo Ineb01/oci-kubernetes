@@ -1,6 +1,7 @@
 module "argocd-deployment" {
   source = "../modules/argocd"
   domain = var.argocd_domain
+  depends_on = [ module.ingress, module.authentik-deployment ]
 }
 
 module "ingress" {
@@ -9,29 +10,22 @@ module "ingress" {
   private_key = var.private_key
   router_domain = var.router_domain
   proxmox_domain = var.proxmox_domain
+
 }
 
 module "authentik-deployment" {
   source = "../modules/authentik"
   domain = var.authentik_domain
   authentik_admin_token = var.authentik_admin_token
+  depends_on = [ module.ingress ]
 }
 
-output "akadmin_pw" {
+output "authentik_admin_pw" {
   value = module.authentik-deployment.akadmin_pw
   sensitive = true
 }
 
-module "proxmox_realm" {
-  source = "../modules/proxmox-realm"
-  domain = var.proxmox_domain
-}
-
 data "authentik_brand" "authentik-default" {
   domain = "authentik-default"
-}
-
-output "proxmox_command" {
-  value = module.proxmox_realm.proxmox_command
-  sensitive = true
+  depends_on = [ module.authentik-deployment ]
 }
