@@ -65,7 +65,7 @@ data "oci_core_images" "oracle_linux" {
   compartment_id = var.tenancy_ocid
   operating_system = "Oracle Linux"
   shape = "VM.Standard.A1.Flex"
-  operating_system_version = "7.9"
+  operating_system_version = "8"
   sort_by = "TIMECREATED"
   sort_order = "DESC"
 }

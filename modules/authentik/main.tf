@@ -8,7 +8,7 @@ resource "helm_release" "authentik" {
   name       = "authentik"
   repository = "https://charts.goauthentik.io/"
   chart      = "authentik"
-  version    = "2024.8.2"
+  version    = "2024.8.3"
   values = [
     templatefile(
       "${path.module}/values.yaml", 
