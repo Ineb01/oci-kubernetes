@@ -74,6 +74,7 @@ EOF
 
 inputs = merge(
   yamldecode(file(find_in_parent_folders("config.yaml")))["base"],
+  yamldecode(file(find_in_parent_folders("secrets.yaml")))["base"],
   {
     certificate = dependency.certs.outputs.certificate,
     private_key = dependency.certs.outputs.private_key,

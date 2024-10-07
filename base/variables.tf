@@ -27,3 +27,12 @@ variable "authentik_admin_token" {
   type = string
   sensitive = true
 }
+
+variable "github_clientid" {
+  type = string
+}
+
+variable "github_clientsecret" {
+  type = string
+  sensitive = true
+}

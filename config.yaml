@@ -9,3 +9,4 @@ base:
   proxmox_domain: proxmox.cluster.dphx.eu
   authentik_domain: authentik.cluster.dphx.eu
   argocd_domain: argocd.cluster.dphx.eu
+  github_clientid: Ov23ligpCNuWq6wQM0wC

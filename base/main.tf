@@ -29,3 +29,21 @@ data "authentik_brand" "authentik-default" {
   domain = "authentik-default"
   depends_on = [ module.authentik-deployment ]
 }
+
+data "authentik_flow" "default-source-authentication" {
+  slug = "default-source-authentication"
+}
+data "authentik_flow" "default-source-enrollment" {
+  slug = "default-source-enrollment"
+}
+
+resource "authentik_source_oauth" "name" {
+  name                = "GitHub"
+  slug                = "github"
+  authentication_flow = data.authentik_flow.default-source-authentication.id
+  enrollment_flow     = data.authentik_flow.default-source-enrollment.id
+
+  provider_type   = "github"
+  consumer_key    = var.github_clientid
+  consumer_secret = var.github_clientsecret
+}
