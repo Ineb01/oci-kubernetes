@@ -16,7 +16,7 @@ resource "tls_private_key" "ssh_tls" {
 
 resource "oci_core_vcn" "vnc" {
   compartment_id = var.tenancy_ocid
-  cidr_block     = "172.19.0.0/16"
+  cidr_block     = "172.22.0.0/16"
   display_name   = "kubernetes_vnc"
 }
 
@@ -55,7 +55,7 @@ resource "oci_core_security_list" "security_list" {
 }
 
 resource "oci_core_subnet" "this" {
-  cidr_block        = "172.19.1.0/24"
+  cidr_block        = "172.22.1.0/24"
   compartment_id    = var.tenancy_ocid
   vcn_id            = oci_core_vcn.vnc.id
   security_list_ids = [oci_core_security_list.security_list.id]
@@ -65,7 +65,7 @@ data "oci_core_images" "oracle_linux" {
   compartment_id = var.tenancy_ocid
   operating_system = "Oracle Linux"
   shape = "VM.Standard.A1.Flex"
-  operating_system_version = "8"
+  operating_system_version = "9"
   sort_by = "TIMECREATED"
   sort_order = "DESC"
 }
@@ -92,8 +92,8 @@ resource "ssh_resource" "open_firewall" {
   timeout = "15m"
 
   commands = [
-    "sudo firewall-cmd --zone=public --add-port=6443/tcp --permanent",
-    "sudo firewall-cmd --reload"
+    "sudo systemctl stop firewalld",
+    "sudo systemctl disable firewalld"
   ]
 }
 

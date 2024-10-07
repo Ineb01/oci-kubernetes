@@ -2,6 +2,8 @@ authentik:
   secret_key: ${authentik_token}
   bootstrap_password: ${authentik_admin_pw}
   bootstrap_token: ${authentik_admin_token}
+  error_reporting:
+    enabled: true
   postgresql:
     password: ${postgres_pw}
 
