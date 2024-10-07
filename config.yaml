@@ -3,7 +3,7 @@ certs:
   subdomain: cluster.dphx.eu
   email: benjamin.bachmayr@gmail.com
 cluster:
-  proxmox_node: proxmox-1
+  region: eu-frankfurt-1
 base:
   router_domain: router.cluster.dphx.eu
   proxmox_domain: proxmox.cluster.dphx.eu
