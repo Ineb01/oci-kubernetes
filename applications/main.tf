@@ -23,3 +23,14 @@ spec:
 EOF
 )
 }
+
+module "reverse-proxy-hello-static" {
+  source = "../modules/auth-proxy"
+  svc-name = "nginx-svc"
+  svc-namespace = "hello-static"
+  svc-port = 80
+  display_name = "Hello Static"
+  name = "hello-static"
+  external-domain = "hellostatic.cluster.dphx.eu"
+}
+
