@@ -3,6 +3,7 @@ global:
 
 configs:
   cm:
+    timeout.reconciliation: 30s
     dex.config: |
       connectors:
       - config:
