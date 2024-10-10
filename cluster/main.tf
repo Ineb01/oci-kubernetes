@@ -36,7 +36,7 @@ resource "oci_core_route_table" "rtb" {
 }
 
 resource "oci_core_route_table_attachment" "attachment" {
-  subnet_id = oci_core_subnet.this.id
+  subnet_id      = oci_core_subnet.this.id
   route_table_id = oci_core_route_table.rtb.id
 }
 
@@ -62,25 +62,26 @@ resource "oci_core_subnet" "this" {
 }
 
 data "oci_core_images" "oracle_linux" {
-  compartment_id = var.tenancy_ocid
-  operating_system = "Oracle Linux"
-  shape = "VM.Standard.A1.Flex"
+  compartment_id           = var.tenancy_ocid
+  operating_system         = "Oracle Linux"
+  shape                    = "VM.Standard.A1.Flex"
   operating_system_version = "9"
-  sort_by = "TIMECREATED"
-  sort_order = "DESC"
+  sort_by                  = "TIMECREATED"
+  sort_order               = "DESC"
 }
 
 module "instance" {
-  source                     = "oracle-terraform-modules/compute-instance/oci"
-  compartment_ocid           = var.tenancy_ocid
-  instance_display_name      = "kubernetes_node"
-  instance_flex_ocpus        = 4
-  source_ocid                = data.oci_core_images.oracle_linux.images[0].id
-  subnet_ocids               = [oci_core_subnet.this.id]
-  public_ip                  = "EPHEMERAL"
-  ssh_public_keys            = tls_private_key.ssh_tls.public_key_openssh
-  block_storage_sizes_in_gbs = [50]
-  shape                      = "VM.Standard.A1.Flex"
+  source                      = "oracle-terraform-modules/compute-instance/oci"
+  compartment_ocid            = var.tenancy_ocid
+  instance_display_name       = "kubernetes_node"
+  instance_flex_ocpus         = 4
+  instance_flex_memory_in_gbs = 24
+  source_ocid                 = data.oci_core_images.oracle_linux.images[0].id
+  subnet_ocids                = [oci_core_subnet.this.id]
+  public_ip                   = "EPHEMERAL"
+  ssh_public_keys             = tls_private_key.ssh_tls.public_key_openssh
+  block_storage_sizes_in_gbs  = [50]
+  shape                       = "VM.Standard.A1.Flex"
 }
 
 resource "time_sleep" "wait_180_seconds" {
@@ -103,7 +104,7 @@ resource "ssh_resource" "open_firewall" {
     "sudo systemctl disable firewalld"
   ]
 
-  depends_on = [ time_sleep.wait_180_seconds ]
+  depends_on = [time_sleep.wait_180_seconds]
 }
 
 resource "ssh_resource" "install_k3s_1" {
@@ -119,7 +120,7 @@ resource "ssh_resource" "install_k3s_1" {
     "curl -sfL https://get.k3s.io | K3S_TOKEN=${random_password.k3s_token.result} sh -s - server --cluster-init --disable traefik --write-kubeconfig-mode 644 --node-name k3s-home-01 --tls-san ${module.instance.public_ip[0]}"
   ]
 
-  depends_on = [ time_sleep.wait_180_seconds ]
+  depends_on = [time_sleep.wait_180_seconds]
 }
 
 resource "ssh_resource" "kubeconfig" {
