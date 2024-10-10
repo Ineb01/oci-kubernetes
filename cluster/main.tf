@@ -74,12 +74,19 @@ module "instance" {
   source                     = "oracle-terraform-modules/compute-instance/oci"
   compartment_ocid           = var.tenancy_ocid
   instance_display_name      = "kubernetes_node"
+  instance_flex_ocpus        = 4
   source_ocid                = data.oci_core_images.oracle_linux.images[0].id
   subnet_ocids               = [oci_core_subnet.this.id]
   public_ip                  = "EPHEMERAL"
   ssh_public_keys            = tls_private_key.ssh_tls.public_key_openssh
   block_storage_sizes_in_gbs = [50]
   shape                      = "VM.Standard.A1.Flex"
+}
+
+resource "time_sleep" "wait_180_seconds" {
+  depends_on = [module.instance]
+
+  create_duration = "180s"
 }
 
 resource "ssh_resource" "open_firewall" {
@@ -95,6 +102,8 @@ resource "ssh_resource" "open_firewall" {
     "sudo systemctl stop firewalld",
     "sudo systemctl disable firewalld"
   ]
+
+  depends_on = [ time_sleep.wait_180_seconds ]
 }
 
 resource "ssh_resource" "install_k3s_1" {
@@ -109,6 +118,8 @@ resource "ssh_resource" "install_k3s_1" {
   commands = [
     "curl -sfL https://get.k3s.io | K3S_TOKEN=${random_password.k3s_token.result} sh -s - server --cluster-init --disable traefik --write-kubeconfig-mode 644 --node-name k3s-home-01 --tls-san ${module.instance.public_ip[0]}"
   ]
+
+  depends_on = [ time_sleep.wait_180_seconds ]
 }
 
 resource "ssh_resource" "kubeconfig" {
