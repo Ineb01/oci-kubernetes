@@ -49,4 +49,7 @@ resource "authentik_source_oauth" "name" {
   consumer_key    = var.github_clientid
   consumer_secret = var.github_clientsecret
   depends_on = [ module.authentik-deployment ]
+  lifecycle {
+    ignore_changes = [ oidc_jwks_url ]
+  }
 }
