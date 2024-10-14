@@ -11,7 +11,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Ineb01/k8s-redirecter
+    repoURL: https://github.com/Ineb01/k8s-static-web
     path: .
     targetRevision: HEAD
   destination:
@@ -43,19 +43,20 @@ metadata:
   name: vscode-server
   namespace: argocd
 spec:
-  destination:
-    namespace: applications
-    server: https://kubernetes.default.svc
   project: default
   source:
-    chart: code-server
-    repoURL: https://nicholaswilde.github.io/helm-charts/
-    targetRevision: 1.1.1
+    repoURL: https://github.com/Ineb01/vsc-server-setup.git
+    path: .
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: applications
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
-    - PrunePropagationPolicy=foreground
-    - CreateNamespace=true
+      - Replace=true
 EOF
 )
 }
