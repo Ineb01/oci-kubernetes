@@ -70,3 +70,15 @@ resource "authentik_group" "argocd_admins" {
 resource "authentik_group" "argocd_viewers" {
   name    = "ArgoCD Viewers"
 }
+
+resource "authentik_policy_binding" "app-access-admins" {
+  target = authentik_application.argocd.uuid
+  group  = authentik_group.argocd_admins.id
+  order  = 0
+}
+
+resource "authentik_policy_binding" "app-access-viewers" {
+  target = authentik_application.argocd.uuid
+  group  = authentik_group.argocd_viewers.id
+  order  = 1
+}

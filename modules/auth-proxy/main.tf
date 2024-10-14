@@ -16,6 +16,17 @@ resource "authentik_application" "this" {
   protocol_provider = authentik_provider_proxy.this.id
 }
 
+resource "authentik_group" "this" {
+  name    = "${var.name} Users"
+}
+
+resource "authentik_policy_binding" "app-access-admins" {
+  target = authentik_application.this.uuid
+  group  = authentik_group.this.id
+  order  = 0
+}
+
+
 resource "authentik_outpost" "this" {
   name = var.name
   protocol_providers = [authentik_provider_proxy.this.id]
