@@ -20,6 +20,8 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - Replace=true
 EOF
 )
 }
