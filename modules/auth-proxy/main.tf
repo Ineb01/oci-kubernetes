@@ -19,7 +19,7 @@ resource "authentik_application" "this" {
 resource "authentik_outpost" "this" {
   name = var.name
   protocol_providers = [authentik_provider_proxy.this.id]
-  service_connection = "88fa3260-a0bc-4be4-a7e5-687745600bb9"
+  service_connection = var.outpost_kubernetes_integration_id
 
   config = jsonencode({
     log_level: "info"

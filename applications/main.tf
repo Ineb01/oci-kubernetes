@@ -32,6 +32,7 @@ module "reverse-proxy-hello-static" {
   display_name = "Hello Static"
   name = "hello-static"
   external-domain = "hellostatic.cluster.dphx.eu"
+  outpost_kubernetes_integration_id = var.outpost_kubernetes_integration_id
 }
 
 resource "kubernetes_manifest" "vsc-server" {
@@ -67,4 +68,5 @@ module "reverse-proxy-vsc" {
   display_name = "VSCode"
   name = "vsc"
   external-domain = "vsc.cluster.dphx.eu"
+  outpost_kubernetes_integration_id = var.outpost_kubernetes_integration_id
 }

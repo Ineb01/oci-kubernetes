@@ -11,4 +11,4 @@ base:
   argocd_domain: argocd.cluster.dphx.eu
   github_clientid: Ov23ligpCNuWq6wQM0wC
 applications:
-  
+  outpost_kubernetes_integration_id: abb44e34-6bca-4cae-bcf1-ef47fde59e5e
