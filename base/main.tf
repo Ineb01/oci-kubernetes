@@ -53,3 +53,26 @@ resource "authentik_source_oauth" "name" {
     ignore_changes = [ oidc_jwks_url ]
   }
 }
+
+resource "kubernetes_service_account_v1" "admin" {
+  metadata {
+    name      = "admin"
+    namespace = "kube-system"
+  }
+}
+
+resource "kubernetes_cluster_role_binding_v1" "admin" {
+  metadata {
+    name = "admin"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "cluster-admin"
+  }
+  subject {
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account_v1.admin.metadata[0].name
+    namespace = kubernetes_service_account_v1.admin.metadata[0].namespace
+  }
+}
