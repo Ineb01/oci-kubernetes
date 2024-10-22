@@ -36,3 +36,12 @@ variable "github_clientsecret" {
   type = string
   sensitive = true
 }
+
+variable "users" {
+  type = list(object({
+    username = string
+    name = string
+    email = string
+    groups = optional(list(string), [])
+  }))
+}

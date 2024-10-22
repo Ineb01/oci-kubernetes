@@ -76,3 +76,9 @@ resource "kubernetes_cluster_role_binding_v1" "admin" {
     namespace = kubernetes_service_account_v1.admin.metadata[0].namespace
   }
 }
+
+module "user_and_groups" {
+  source = "../modules/user_and_groups"
+  for_each = {for user in var.users : user.username => user}
+  user = each.value
+}

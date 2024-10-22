@@ -10,5 +10,10 @@ base:
   authentik_domain: authentik.cluster.dphx.eu
   argocd_domain: argocd.cluster.dphx.eu
   github_clientid: Ov23ligpCNuWq6wQM0wC
+  users:
+    - username: Ineb01
+      name: "Benjamin Bachmayr"
+      email: "benjamin.bachmayr@gmail.com"
+
 applications:
   outpost_kubernetes_integration_id: abb44e34-6bca-4cae-bcf1-ef47fde59e5e
