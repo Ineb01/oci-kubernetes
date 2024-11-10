@@ -1,2 +1,2 @@
-# home-proxmox
-IaC setup for my home proxmox server
+# oci-kubernetes
+IaC setup for my kubernetes cluster
