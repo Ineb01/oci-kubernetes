@@ -23,5 +23,7 @@ remote_state {
 
     skip_metadata_api_check     = true
     force_path_style            = true
+
+    disable_bucket_update       = true
   }
 }
