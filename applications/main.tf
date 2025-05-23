@@ -20,6 +20,7 @@ spec:
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
+    namespace: applications
   syncPolicy:
     automated:
       prune: true
@@ -28,6 +29,7 @@ spec:
       - Replace=true
 EOF
 )
+  depends_on = [ kubernetes_namespace.applications ]
 }
 
 module "reverse-proxy-hello-static" {
@@ -39,6 +41,33 @@ module "reverse-proxy-hello-static" {
   name = "hello-static"
   external-domain = "hellostatic.cluster.dphx.eu"
   outpost_kubernetes_integration_id = var.outpost_kubernetes_integration_id
+}
+
+resource "kubernetes_manifest" "open-webui" {
+  manifest = yamldecode(<<EOF
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: open-webui
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ineb01/open-webui.git
+    path: .
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: applications
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Replace=true
+EOF
+)
+  depends_on = [kubernetes_namespace.applications]
 }
 
 resource "kubernetes_manifest" "vsc-server" {
