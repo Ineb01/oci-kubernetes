@@ -79,14 +79,14 @@ module "instance" {
   subnet_ocids                = [oci_core_subnet.this.id]
   public_ip                   = "EPHEMERAL"
   ssh_public_keys             = tls_private_key.ssh_tls.public_key_openssh
-  boot_volume_size_in_gbs     = 50
+  boot_volume_size_in_gbs     = 200
   shape                       = "VM.Standard.A1.Flex"
 }
 
-resource "time_sleep" "wait_180_seconds" {
+resource "time_sleep" "wait_300_seconds" {
   depends_on = [module.instance]
 
-  create_duration = "180s"
+  create_duration = "300s"
 }
 
 resource "ssh_resource" "open_firewall" {
@@ -103,7 +103,7 @@ resource "ssh_resource" "open_firewall" {
     "sudo systemctl disable firewalld"
   ]
 
-  depends_on = [time_sleep.wait_180_seconds]
+  depends_on = [time_sleep.wait_300_seconds]
 }
 
 resource "ssh_resource" "install_k3s_1" {
@@ -119,7 +119,7 @@ resource "ssh_resource" "install_k3s_1" {
     "curl -sfL https://get.k3s.io | K3S_TOKEN=${random_password.k3s_token.result} sh -s - server --cluster-init --disable traefik --write-kubeconfig-mode 644 --node-name k3s-home-01 --tls-san ${module.instance.public_ip[0]}"
   ]
 
-  depends_on = [time_sleep.wait_180_seconds]
+  depends_on = [time_sleep.wait_300_seconds]
 }
 
 resource "ssh_resource" "kubeconfig" {
