@@ -43,5 +43,6 @@ variable "users" {
     name = string
     email = string
     groups = optional(list(string), [])
+    superuser = optional(bool, false)
   }))
 }

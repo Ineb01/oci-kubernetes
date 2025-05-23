@@ -7,4 +7,8 @@ resource "authentik_user" "name" {
   attributes = jsonencode({
     "goauthentik.io/user/sources" = ["GitHub"]
   })
+  groups = var.user.superuser ? [var.superuser_group] : []
+  lifecycle {
+    ignore_changes = [ groups ]
+  }
 }

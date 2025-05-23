@@ -79,8 +79,16 @@ resource "kubernetes_cluster_role_binding_v1" "admin" {
   }
 }
 
+# Create the admin group if it doesn't exist yet
+resource "authentik_group" "admin" {
+  name        = "authentik Admins Custom"
+  is_superuser = true
+  depends_on = [ module.authentik-deployment ]
+}
+
 module "user_and_groups" {
   source = "../modules/user_and_groups"
   for_each = {for user in var.users : user.username => user}
   user = each.value
+  superuser_group = authentik_group.admin.id
 }
