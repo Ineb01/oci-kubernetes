@@ -45,6 +45,8 @@ resource "authentik_source_oauth" "name" {
   authentication_flow = data.authentik_flow.default-source-authentication.id
   enrollment_flow     = data.authentik_flow.default-source-enrollment.id
 
+  user_matching_mode = "email_link"
+
   provider_type   = "github"
   consumer_key    = var.github_clientid
   consumer_secret = var.github_clientsecret
