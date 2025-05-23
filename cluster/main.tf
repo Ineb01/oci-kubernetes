@@ -1,4 +1,3 @@
-
 resource "random_password" "k3s_token" {
   length           = 16
   special          = true
@@ -80,7 +79,7 @@ module "instance" {
   subnet_ocids                = [oci_core_subnet.this.id]
   public_ip                   = "EPHEMERAL"
   ssh_public_keys             = tls_private_key.ssh_tls.public_key_openssh
-  block_storage_sizes_in_gbs  = [50]
+  boot_volume_size_in_gbs     = 50
   shape                       = "VM.Standard.A1.Flex"
 }
 
@@ -140,20 +139,20 @@ resource "ssh_resource" "kubeconfig" {
 
 
 resource "local_file" "kubeconfig" {
-  filename = "/home/ineb01/.kube/config"
+  filename = "/home/benja/.kube/config"
   content  = yamlencode(local.kubeconfig)
 }
 
 resource "local_file" "ssh_key" {
   content         = tls_private_key.ssh_tls.private_key_pem
   file_permission = "600"
-  filename        = "/home/ineb01/.ssh/nodes"
+  filename        = "/home/benja/.ssh/nodes"
 }
 
 resource "local_file" "ssh_key_pub" {
   content         = tls_private_key.ssh_tls.public_key_openssh
   file_permission = "755"
-  filename        = "/home/ineb01/.ssh/nodes.pub"
+  filename        = "/home/benja/.ssh/nodes.pub"
 }
 
 output "kubernetes_host" {
