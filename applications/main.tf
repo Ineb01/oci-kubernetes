@@ -1,4 +1,8 @@
-
+resource "kubernetes_namespace" "applications" {
+  metadata {
+    name = "applications"
+  }
+}
 
 
 resource "kubernetes_manifest" "hello-static" {
@@ -61,12 +65,13 @@ spec:
       - Replace=true
 EOF
 )
+  depends_on = [kubernetes_namespace.applications]
 }
 
 module "reverse-proxy-vsc" {
   source = "../modules/auth-proxy"
   svc-name = "vscode-server"
-  svc-namespace = "applications"
+  svc-namespace = kubernetes_namespace.applications.metadata[0].name
   svc-port = 8443
   display_name = "VSCode"
   name = "vsc"

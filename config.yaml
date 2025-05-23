@@ -17,4 +17,4 @@ base:
       superuser: true
 
 applications:
-  outpost_kubernetes_integration_id: abb44e34-6bca-4cae-bcf1-ef47fde59e5e
+  outpost_kubernetes_integration_id: b15cd11d-8f31-4d13-abf7-2b5afaeb1f11
