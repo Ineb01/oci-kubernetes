@@ -27,11 +27,6 @@ variable "authentik-namespace" {
   default = "authentik"
 }
 
-variable "ingress-class" {
-  type = string
-  default = "nginx"
-}
-
 variable "outpost_kubernetes_integration_id" {
   type = string
 }

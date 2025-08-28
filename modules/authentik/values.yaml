@@ -12,7 +12,12 @@ server:
     enabled: true
     hosts:
       - ${domain}
-    ingressClassName: nginx
+    tls:
+      - secretName: authentik-tls
+        hosts:
+          - ${domain}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
 
 postgresql:
   enabled: true

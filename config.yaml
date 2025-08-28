@@ -4,6 +4,7 @@ certs:
   email: benjamin.bachmayr@gmail.com
 cluster:
   region: eu-frankfurt-1
+  route53_zone: dphx.eu
 base:
   router_domain: router.cluster.dphx.eu
   proxmox_domain: proxmox.cluster.dphx.eu

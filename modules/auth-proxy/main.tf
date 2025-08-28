@@ -41,7 +41,6 @@ resource "authentik_outpost" "this" {
     object_naming_template: "ak-outpost-%(name)s"
     authentik_host_insecure: false
     kubernetes_service_type: "ClusterIP"
-    kubernetes_ingress_class_name: var.ingress-class
     kubernetes_ingress_secret_name: "authentik-outpost-tls"
   })
 }

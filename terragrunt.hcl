@@ -5,25 +5,8 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket                      = "tf-state"
-    region                      = "eu-frankfurt-1"
-    key                         = "homelab/${path_relative_to_include()}.tfstate"
-    profile                     = "OCI"
-    endpoint                    = "https://frp5iehuhoet.compat.objectstorage.eu-frankfurt-1.oraclecloud.com"
-
-    skip_region_validation      = true
-    skip_credentials_validation = true
-    skip_requesting_account_id  = true
-    skip_s3_checksum            = true
-
-    skip_bucket_versioning      = true
-    skip_bucket_ssencryption    = true
-    skip_bucket_root_access     = true
-    skip_bucket_enforced_tls    = true
-
-    skip_metadata_api_check     = true
-    force_path_style            = true
-
-    disable_bucket_update       = true
+    bucket                      = "oci-cluster-terraform-state"
+    region                      = "eu-central-1"
+    key                         = "oci-cluster/${path_relative_to_include()}.tfstate"
   }
 }

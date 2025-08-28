@@ -1,23 +1,56 @@
-module "argocd-deployment" {
-  source = "../modules/argocd"
-  domain = var.argocd_domain
-  depends_on = [ module.ingress, module.authentik-deployment ]
+resource "null_resource" "cert_manager_install" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml"
+  }
 }
 
-module "ingress" {
-  source = "../modules/ingress"
-  certificate = var.certificate
-  private_key = var.private_key
-  router_domain = var.router_domain
-  proxmox_domain = var.proxmox_domain
 
+# Create Let's Encrypt ClusterIssuer
+resource "kubernetes_manifest" "letsencrypt_issuer" {
+  manifest = {
+    apiVersion = "cert-manager.io/v1"
+    kind       = "ClusterIssuer"
+    metadata = {
+      name = "letsencrypt-prod"
+    }
+    spec = {
+      acme = {
+        server = "https://acme-v02.api.letsencrypt.org/directory"
+        email  = "admin@dphx.eu"
+        privateKeySecretRef = {
+          name = "letsencrypt-prod"
+        }
+        solvers = [{
+          http01 = {
+            ingress = {
+              class = "traefik"
+            }
+          }
+        }]
+      }
+    }
+  }
+
+  depends_on = [null_resource.cert_manager_install]
 }
 
 module "authentik-deployment" {
   source = "../modules/authentik"
   domain = var.authentik_domain
   authentik_admin_token = var.authentik_admin_token
-  depends_on = [ module.ingress ]
+  depends_on = [ resource.kubernetes_manifest.letsencrypt_issuer ]
+}
+
+resource "time_sleep" "wait_60_seconds" {
+  depends_on = [ module.authentik-deployment ]
+
+  create_duration = "60s"
+}
+
+module "argocd-deployment" {
+  source = "../modules/argocd"
+  domain = var.argocd_domain
+  depends_on = [ time_sleep.wait_60_seconds ]
 }
 
 output "authentik_admin_pw" {
@@ -27,16 +60,16 @@ output "authentik_admin_pw" {
 
 data "authentik_brand" "authentik-default" {
   domain = "authentik-default"
-  depends_on = [ module.authentik-deployment ]
+  depends_on = [ time_sleep.wait_60_seconds ]
 }
 
 data "authentik_flow" "default-source-authentication" {
   slug = "default-source-authentication"
-  depends_on = [ module.authentik-deployment ]
+  depends_on = [ time_sleep.wait_60_seconds ]
 }
 data "authentik_flow" "default-source-enrollment" {
   slug = "default-source-enrollment"
-  depends_on = [ module.authentik-deployment ]
+  depends_on = [ time_sleep.wait_60_seconds ]
 }
 
 resource "authentik_source_oauth" "name" {
@@ -50,7 +83,7 @@ resource "authentik_source_oauth" "name" {
   provider_type   = "github"
   consumer_key    = var.github_clientid
   consumer_secret = var.github_clientsecret
-  depends_on = [ module.authentik-deployment ]
+  depends_on = [ time_sleep.wait_60_seconds ]
   lifecycle {
     ignore_changes = [ oidc_jwks_url ]
   }
@@ -83,7 +116,7 @@ resource "kubernetes_cluster_role_binding_v1" "admin" {
 resource "authentik_group" "admin" {
   name        = "authentik Admins Custom"
   is_superuser = true
-  depends_on = [ module.authentik-deployment ]
+  depends_on = [ time_sleep.wait_60_seconds ]
 }
 
 module "user_and_groups" {

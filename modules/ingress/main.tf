@@ -4,20 +4,6 @@ resource "kubernetes_namespace" "ingress-controller" {
   }
 }
 
-resource "helm_release" "nginx-ingress" {
-  name       = "nginx-ingress"
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx"
-  namespace  = kubernetes_namespace.ingress-controller.metadata[0].name
-  version    = "4.4.2"
-  values = [
-    templatefile("${path.module}/values.yaml", {
-      namespace = kubernetes_namespace.ingress-controller.metadata[0].name
-      secret_name = kubernetes_secret.tls_secret.metadata[0].name
-    })
-  ]
-}
-
 resource "kubernetes_service" "proxmox" {
   metadata {
     name = "proxmox"
@@ -45,36 +31,6 @@ resource "kubernetes_endpoints" "proxmox" {
     port {
       port     = 8006
       protocol = "TCP"
-    }
-  }
-}
-
-resource "kubernetes_ingress_v1" "proxmox-ingress" {
-  metadata {
-    name = "proxmox-ingress"
-    namespace = kubernetes_namespace.ingress-controller.metadata[0].name
-    annotations = {
-      "nginx.ingress.kubernetes.io/backend-protocol" = "HTTPS"
-    }
-  }
-
-  spec {
-    ingress_class_name = "nginx"
-    rule {
-      host = var.proxmox_domain
-      http {
-        path {
-          backend {
-            service {
-              name = "proxmox"
-              port {
-                number = 8006
-              }
-            }
-          }
-          path = "/"
-        }
-      }
     }
   }
 }
@@ -117,7 +73,6 @@ resource "kubernetes_ingress_v1" "router-ingress" {
   }
 
   spec {
-    ingress_class_name = "nginx"
     rule {
       host = var.router_domain
       http {

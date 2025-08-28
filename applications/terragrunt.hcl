@@ -6,8 +6,12 @@ dependency "cluster" {
   config_path = "../cluster"
 }
 
-dependency "certs" {
-  config_path = "../certs"
+dependency "secrets" {
+  config_path = "../secrets"
+}
+
+dependency "base" {
+  config_path = "../base"
 }
 
 generate "provider" {
@@ -46,7 +50,7 @@ EOC
 
 provider "authentik" {
   url = "https://${yamldecode(file(find_in_parent_folders("config.yaml")))["base"]["authentik_domain"]}"
-  token = "${dependency.certs.outputs.authentik_admin_token}"
+  token = "${yamldecode(dependency.secrets.outputs.secrets)["base"]["authentik_admin_token"]}"
 }
 
 terraform {
@@ -74,5 +78,5 @@ EOF
 
 inputs = merge(
   yamldecode(file(find_in_parent_folders("config.yaml")))["applications"],
-  yamldecode(file(find_in_parent_folders("secrets.yaml")))["applications"],
+  yamldecode(dependency.secrets.outputs.secrets)["base"],
 )
