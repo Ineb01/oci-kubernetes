@@ -130,6 +130,22 @@ resource "ssh_resource" "kubeconfig" {
   depends_on = [ssh_resource.install_k3s_1]
 }
 
+resource "ssh_resource" "install_certmanager" {
+
+  host = module.instance.public_ip[0]
+  user = "opc"
+
+  private_key = tls_private_key.ssh_tls.private_key_openssh
+
+  timeout = "15m"
+
+  commands = [
+    "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml"
+  ]
+
+  depends_on = [ssh_resource.kubeconfig]
+}
+
 data "aws_route53_zone" "main" {
   name = var.route53_zone
 }

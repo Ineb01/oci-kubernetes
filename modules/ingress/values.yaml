@@ -1,4 +1,0 @@
-controller:
-  allowSnippetAnnotations: true
-  extraArgs:
-    default-ssl-certificate: ${namespace}/${secret_name}

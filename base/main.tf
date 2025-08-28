@@ -1,11 +1,3 @@
-resource "null_resource" "cert_manager_install" {
-  provisioner "local-exec" {
-    command = "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml"
-  }
-}
-
-
-# Create Let's Encrypt ClusterIssuer
 resource "kubernetes_manifest" "letsencrypt_issuer" {
   manifest = {
     apiVersion = "cert-manager.io/v1"
@@ -30,8 +22,6 @@ resource "kubernetes_manifest" "letsencrypt_issuer" {
       }
     }
   }
-
-  depends_on = [null_resource.cert_manager_install]
 }
 
 module "authentik-deployment" {
