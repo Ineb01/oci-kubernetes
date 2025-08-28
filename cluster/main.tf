@@ -91,7 +91,9 @@ resource "ssh_resource" "open_firewall" {
 
   commands = [
     "sudo systemctl stop firewalld",
-    "sudo systemctl disable firewalld"
+    "sudo systemctl disable firewalld",
+    "sudo pvresize /dev/sda3",
+    "sudo xfs_growfs /"
   ]
 
   depends_on = [time_sleep.wait_420_seconds]
