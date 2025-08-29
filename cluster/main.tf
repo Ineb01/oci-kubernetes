@@ -167,20 +167,20 @@ resource "aws_route53_record" "cluster_wildcard" {
 }
 
 resource "local_file" "kubeconfig" {
-  filename = "/home/benja/.kube/config"
+  filename = "../authfiles/.kube/config"
   content  = yamlencode(local.kubeconfig)
 }
 
 resource "local_file" "ssh_key" {
   content         = tls_private_key.ssh_tls.private_key_pem
   file_permission = "600"
-  filename        = "/home/benja/.ssh/nodes"
+  filename        = "../authfiles/.ssh/nodes"
 }
 
 resource "local_file" "ssh_key_pub" {
   content         = tls_private_key.ssh_tls.public_key_openssh
   file_permission = "755"
-  filename        = "/home/benja/.ssh/nodes.pub"
+  filename        = "../authfiles/.ssh/nodes.pub"
 }
 
 output "kubernetes_host" {

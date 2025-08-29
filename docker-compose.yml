@@ -1,0 +1,14 @@
+
+version: '3.8'
+services:
+  kubectl:
+    image: bitnami/kubectl:latest
+    container_name: kubectl
+    volumes:
+      - ./authfiles/.kube/config:/.kube/config
+  ssh:
+    image: kroniak/ssh-client:latest
+    container_name: ssh
+    command: ["ssh", "-i", "/.ssh/nodes", "-oStrictHostKeyChecking=no", "opc@cluster.dphx.eu"]
+    volumes:
+      - ./authfiles/.ssh/nodes:/.ssh/nodes
