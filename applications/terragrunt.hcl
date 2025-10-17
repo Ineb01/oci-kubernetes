@@ -78,5 +78,5 @@ EOF
 
 inputs = merge(
   yamldecode(file(find_in_parent_folders("config.yaml")))["applications"],
-  yamldecode(dependency.secrets.outputs.secrets)["base"],
+  yamldecode(dependency.secrets.outputs.secrets)["applications"],
 )
